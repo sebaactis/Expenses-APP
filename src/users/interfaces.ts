@@ -3,4 +3,7 @@ export interface UserResponse {
     username: string;
     message?: string;
     password?: string;
+    country?: string;
+    preferCurrency?: string;
+    spendingLimit?: number;
 }

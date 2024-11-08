@@ -39,8 +39,8 @@ export class UsersService {
       const users = await this.userRepository.find();
 
       return users.map((user) => ({
-        email: user.email,
-        username: user.username
+        ...user,
+        password: undefined
       }))
 
     } catch (error) {
@@ -58,11 +58,8 @@ export class UsersService {
         throw new HttpException("USER_NOT_FOUND", HttpStatus.NOT_FOUND)
       }
 
-      return {
-        email: user.email,
-        username: user.username,
-        password: user.password
-      }
+      return user;
+
     } catch (error) {
       if (error instanceof HttpException) {
         throw error
@@ -76,19 +73,19 @@ export class UsersService {
   async update(email: string, updateUserDto: UpdateUserDto): Promise<UserResponse> {
     try {
       const user = await this.userRepository.findOneBy({ email });
-  
+
       if (!user) {
         throw new HttpException("USER_NOT_FOUND", HttpStatus.NOT_FOUND);
       }
-  
+
       const updatedUser = await this.userRepository.save({
-        ...user,             
-        ...updateUserDto, 
+        ...user,
+        ...updateUserDto,
       });
-  
+
       return {
-        email: updatedUser.email,
-        username: updatedUser.username,
+        ...updatedUser,
+        password: undefined
       };
     } catch (error) {
       if (error instanceof HttpException) {
@@ -102,20 +99,20 @@ export class UsersService {
     try {
 
       const user = await this.userRepository.findOneBy({ email });
-  
+
       if (!user) {
         throw new HttpException("USER_NOT_FOUND", HttpStatus.NOT_FOUND);
       }
-  
+
       await this.userRepository.delete({ email });
-  
+
       return {
         email: user.email,
         username: user.username,
         message: "User deleted successfully"
       }
     } catch (error) {
-      
+
       if (error instanceof HttpException) {
         throw error;
       }

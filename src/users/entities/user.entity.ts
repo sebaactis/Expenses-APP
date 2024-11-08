@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Account } from "src/accounts/entities/account.entity";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 
 @Entity()
 export class User {
@@ -13,4 +14,16 @@ export class User {
 
     @Column()
     password: string;
+
+    @Column({ nullable: true })
+    country?: string;
+
+    @Column({ nullable: true, default: "ARS" })
+    preferCurrency?: string;
+
+    @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
+    spendingLimit?: number;
+
+    @OneToMany(() => Account, (account) => account.user)
+    accounts: Account[];
 }
