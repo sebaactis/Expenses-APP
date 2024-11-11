@@ -7,6 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { AccountsModule } from './accounts/accounts.module';
 import { Account } from './accounts/entities/account.entity';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
+import { TransactionsModule } from './transactions/transactions.module';
+import { Transaction } from './transactions/entities/transaction.entity';
 
 @Module({
   imports: [
@@ -19,10 +23,12 @@ import { Account } from './accounts/entities/account.entity';
       username: 'sebaactis',
       password: '54891329',
       database: 'expenses',
-      entities: [User, Account],
+      entities: [User, Account, Category, Transaction],
       synchronize: true,
     }),
-    AccountsModule],
+    AccountsModule,
+    CategoriesModule,
+    TransactionsModule],
   controllers: [AppController],
   providers: [AppService],
 })
