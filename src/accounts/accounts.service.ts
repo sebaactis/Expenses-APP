@@ -22,9 +22,10 @@ export class AccountsService {
     }
   }
 
-  async findAll(): Promise<AccountResponse[]> {
+  async findAll(userId: number): Promise<AccountResponse[]> {
     try {
       const accounts = await this.accountRepository.find({
+        where: { userId },
         relations: ['user']
       });
 
@@ -41,11 +42,11 @@ export class AccountsService {
     }
   }
 
-  async findOne(id: number): Promise<AccountResponse> {
+  async findOne(id: number, userId: number): Promise<AccountResponse> {
 
     try {
       const account = await this.accountRepository.findOne({
-        where: { id },
+        where: { id, userId },
         relations: ['user']
       })
 
@@ -70,11 +71,13 @@ export class AccountsService {
 
   }
 
-  async update(id: number, updateAccountDto: UpdateAccountDto): Promise<AccountResponse> {
+  async update(id: number, updateAccountDto: UpdateAccountDto, userId: number): Promise<AccountResponse> {
 
     try {
 
-      const account = await this.accountRepository.findOneBy({ id })
+      const account = await this.accountRepository.findOne({
+        where: { id, userId }
+      })
 
       if (!account) {
         throw new HttpException("ACCOUNT_NOT_FOUND", HttpStatus.NOT_FOUND)
@@ -96,10 +99,12 @@ export class AccountsService {
     }
   }
 
-  async remove(id: number): Promise<{accountId: number, message: string}> {
+  async remove(id: number, userId: number): Promise<{ accountId: number, message: string }> {
 
     try {
-      const account = await this.accountRepository.findOneBy({ id })
+      const account = await this.accountRepository.findOne({
+        where: { id, userId }
+      })
 
       if (!account) {
         throw new HttpException("ACCOUNT_NOT_FOUND", HttpStatus.NOT_FOUND)

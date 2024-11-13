@@ -36,7 +36,7 @@ export class AuthService {
             throw new UnauthorizedException('Invalid password');
         }
 
-        const payload = { email: user.email, username: user.username };
+        const payload = { id: user.id, email: user.email, username: user.username };
 
         return {
             message: 'Login successfully',

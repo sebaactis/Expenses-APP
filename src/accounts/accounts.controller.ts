@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
@@ -16,22 +16,26 @@ export class AccountsController {
   }
 
   @Get()
-  async findAll(): Promise<AccountResponse[]> {
-    return await this.accountsService.findAll();
+  async findAll(@Req() req): Promise<AccountResponse[]> {
+    const userId = req.user.id;
+    return await this.accountsService.findAll(userId);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<AccountResponse> {
-    return this.accountsService.findOne(+id);
+  async findOne(@Req() req, @Param('id') id: string): Promise<AccountResponse> {
+    const userId = req.user.id;
+    return this.accountsService.findOne(+id, userId);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto): Promise<AccountResponse> {
-    return this.accountsService.update(+id, updateAccountDto);
+  async update(@Req() req, @Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto): Promise<AccountResponse> {
+    const userId = req.user.id;
+    return this.accountsService.update(+id, updateAccountDto, userId);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ accountId: number, message: string }> {
-    return this.accountsService.remove(+id);
+  async remove(@Req() req, @Param('id') id: string): Promise<{ accountId: number, message: string }> {
+    const userId = req.user.id;
+    return this.accountsService.remove(+id, userId);
   }
 }

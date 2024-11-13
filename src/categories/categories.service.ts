@@ -26,9 +26,9 @@ export class CategoriesService {
     }
   }
 
-  async findAll(): Promise<CategoryResponse[]> {
+  async findAll(userId: number): Promise<CategoryResponse[]> {
     try {
-      const categories = await this.categoryRepository.find();
+      const categories = await this.categoryRepository.find({ where: { userId } });
       return categories.map(category => (
         { ...category }
       ))
@@ -38,11 +38,11 @@ export class CategoriesService {
     }
   }
 
-  async findOne(id: number): Promise<CategoryResponse> {
+  async findOne(id: number, userId: number): Promise<CategoryResponse> {
 
     try {
       const category = await this.categoryRepository.findOne({
-        where: { id }
+        where: { id, userId }
       })
 
       if (!category) {
@@ -64,11 +64,11 @@ export class CategoriesService {
 
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<CategoryResponse> {
+  async update(id: number, updateCategoryDto: UpdateCategoryDto, userId: number): Promise<CategoryResponse> {
 
     try {
 
-      const category = await this.categoryRepository.findOneBy({ id })
+      const category = await this.categoryRepository.findOne({ where: { id, userId } })
 
       if (!category) {
         throw new HttpException('CATEGORY_NOT_FOUND', HttpStatus.NOT_FOUND)
@@ -92,10 +92,10 @@ export class CategoriesService {
 
   }
 
-  async remove(id: number): Promise<CategoryResponse> {
+  async remove(id: number, userId: number): Promise<CategoryResponse> {
 
     try {
-      const category = await this.categoryRepository.findOneBy({ id })
+      const category = await this.categoryRepository.findOne({ where: { id, userId } })
 
       if (!category) {
         throw new HttpException('CATEGORY_NOT_FOUND', HttpStatus.NOT_FOUND)

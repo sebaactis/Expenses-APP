@@ -1,18 +1,19 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateTransactionDto {
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    name: string;
+    name?: string;
 
+    @IsOptional()
     @IsString()
     description?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsDate()
-    date: Date;
+    date?: Date;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
-    amount: number;
+    amount?: number;
 }
